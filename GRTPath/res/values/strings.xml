@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">GRTPath</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">CardsUI</string>
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="overflow">Menu Overflow</string>
+    <string name="color_stripe">Color Stripe</string>
+    <string name="title_activity_stop_finder">StopFinderActivity</string>
+    <string name="search_hint">Search for bus stops</string>
+    <string name="no_search">Bus stops will be displayed here</string>
+    <string name="title_activity_display_routes">DisplayRoutes</string>
+
+</resources>
