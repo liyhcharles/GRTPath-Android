@@ -61,11 +61,20 @@ public class MainActivity extends Activity {
 		
 		mCardView.addCard(stops);
 
-		mCardView
-				.addCard(new MyPlayCard(
-						"Get Directions",
-						"View a map \n",
-						"#f2a400", "#9d36d0", false, true));
+		MyPlayCard map = new MyPlayCard(
+				"Get Directions",
+				"View a map \n",
+				"#f2a400", "#9d36d0", false, true);
+		
+		map.setOnClickListener(new OnClickListener() {
+			 @Override
+             public void onClick(View v) {
+				 Intent intent = new Intent(MainActivity.this, MapActivity.class);
+				 startActivity(intent);
+			 }
+		});
+		
+		mCardView.addCard(map);
 
 		// draw cards
 		mCardView.refresh();

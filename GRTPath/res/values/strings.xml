@@ -14,5 +14,6 @@
     <string name="search_hint">Search for bus stops</string>
     <string name="no_search">Bus stops will be displayed here</string>
     <string name="title_activity_display_routes">DisplayRoutes</string>
+    <string name="title_activity_map">MapActivity</string>
 
 </resources>
