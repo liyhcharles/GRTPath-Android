@@ -117,6 +117,9 @@ public class DisplayRoutesActivity extends Activity {
 				mCardView.addCard(routeCard);
 			} while (cursor.moveToNext());
 		}
+		else {
+			findViewById(R.id.nostops).setVisibility(1);
+		}
 				
 		// draw cards
 		mCardView.refresh();

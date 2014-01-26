@@ -1,17 +1,26 @@
 package com.grtpath.activity;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.grtpath.R;
+import com.grtpath.database.DatabaseHelper;
 
-public class MapActivity extends Activity {
+public class MapActivity extends Activity implements OnInfoWindowClickListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,16 +30,48 @@ public class MapActivity extends Activity {
 		// Get a handle to the Map Fragment
         GoogleMap map = ((MapFragment) getFragmentManager()
                 .findFragmentById(R.id.map)).getMap();
-
-        LatLng sydney = new LatLng(-33.867, 151.206);
-
+        
         map.setMyLocationEnabled(true);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(sydney, 13));
 
-        map.addMarker(new MarkerOptions()
-                .title("Sydney")
-                .snippet("The most populous city in Australia.")
-                .position(sydney));
+        // Get LocationManager object from System Service LOCATION_SERVICE
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        // Create a criteria object to retrieve provider
+        Criteria criteria = new Criteria();
+        // Get the name of the best provider
+        String provider = locationManager.getBestProvider(criteria, true);
+        // Get Current Location
+        Location myLocation = locationManager.getLastKnownLocation(provider);
+        // Get latitude of the current location
+        double latitude = myLocation.getLatitude();
+        // Get longitude of the current location
+        double longitude = myLocation.getLongitude();
+        // Create a LatLng object for the current location
+        LatLng latLng = new LatLng(latitude, longitude);
+        // Show the current location in Google Map        
+        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        // Zoom in the Google Map
+        map.animateCamera(CameraUpdateFactory.zoomTo(15));
+        
+        map.setOnInfoWindowClickListener(this);
+        
+        // get database and cursor
+        SQLiteDatabase db = DatabaseHelper.getStaticDb();     				
+        Cursor cursor = null;
+        cursor = db.query("stops", 
+        		new String[]{"stop_lat", "stop_lon", "stop_id", "stop_name"}, 
+        		null, null, null, null, null);
+        
+        // add stops to map
+        if (cursor.moveToFirst()) {
+        	do {
+        		latitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("stop_lat")));
+        		longitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex("stop_lon")));
+        		String stopId = cursor.getString(cursor.getColumnIndex("stop_id"));
+        		String stopName = cursor.getString(cursor.getColumnIndex("stop_name"));
+        		map.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude)).title(stopId + " " + stopName));
+        	} while (cursor.moveToNext());
+        }
+        
 	}
 
 	@Override
@@ -38,6 +79,16 @@ public class MapActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.map, menu);
 		return true;
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		String title = marker.getTitle();
+		String stopId = title.split("\\s")[0];
+		
+		Intent intent = new Intent(MapActivity.this, DisplayRoutesActivity.class);
+		intent.putExtra("stop_id", stopId);
+		startActivity(intent);
 	}
 
 }
