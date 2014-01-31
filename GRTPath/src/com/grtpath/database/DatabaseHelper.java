@@ -15,7 +15,7 @@ public class DatabaseHelper {
 	
 	private static final String DB_PATH = Environment.getDataDirectory() + "/data/com.grtpath/databases/";
     private static final String DB_NAME = "GRTDB.sqlite";
-    private static final int DB_VERSION = 1;
+    //private static final int DB_VERSION = 1;
 
     public static void createDatabaseIfNotExists(Context context) throws IOException {
         boolean createDb = false;

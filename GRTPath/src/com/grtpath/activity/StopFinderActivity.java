@@ -35,8 +35,7 @@ public class StopFinderActivity extends Activity {
 	 */
 	private void displayStops() {
 		Log.i("StopFinderActivity", "Displaying stops");
-		findViewById(R.id.nosearch).setVisibility(0);
-				
+
 		// init CardView
 		CardUI mCardView = (CardUI) findViewById(R.id.stops_cardview);
 		mCardView.setSwipeable(false);

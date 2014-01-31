@@ -8,6 +8,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -41,14 +42,25 @@ public class MapActivity extends Activity implements OnInfoWindowClickListener {
         String provider = locationManager.getBestProvider(criteria, true);
         // Get Current Location
         Location myLocation = locationManager.getLastKnownLocation(provider);
-        // Get latitude of the current location
-        double latitude = myLocation.getLatitude();
-        // Get longitude of the current location
-        double longitude = myLocation.getLongitude();
-        // Create a LatLng object for the current location
-        LatLng latLng = new LatLng(latitude, longitude);
-        // Show the current location in Google Map        
-        map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        
+        double latitude;
+        double longitude;
+        
+        // move camera to location if possible
+        if (myLocation != null) {
+        	// Get latitude of the current location
+        	latitude = myLocation.getLatitude();
+        	// Get longitude of the current location
+            longitude = myLocation.getLongitude();
+            // Create a LatLng object for the current location
+            LatLng latLng = new LatLng(latitude, longitude);
+            // Show the current location in Google Map        
+            map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+        }
+        else {
+        	Log.e("MapActivity", "NO LOCATION FOUND");
+        }
+        
         // Zoom in the Google Map
         map.animateCamera(CameraUpdateFactory.zoomTo(15));
         

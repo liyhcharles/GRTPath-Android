@@ -4,8 +4,10 @@ import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import org.joda.time.DateTimeComparator;
@@ -71,56 +73,68 @@ public class DisplayRoutesActivity extends Activity {
 		
 		Cursor serviceCursor = db.rawQuery(serviceSQL, null);
 		
-		String serviceName = "";
+		// there may be multiple services, use a list
+		List<String> serviceName = new ArrayList<String>();
 		
-		// expect only one service
 		if (serviceCursor.moveToFirst()) {
-			if (serviceCursor.getCount() > 1) {
-				Log.e("DisplayRoutesActivity", "More than one service found");
-			}
-			serviceName = serviceCursor.getString(serviceCursor.getColumnIndex("service_id"));
+			do {
+				if (serviceCursor.getCount() > 1) {
+					Log.e("DisplayRoutesActivity", "More than one service found");
+				}
+				serviceName.add(serviceCursor.getString(serviceCursor.getColumnIndex("service_id")));
+			} while (serviceCursor.moveToNext());
 		}
 		else {
 			Log.e("DisplayRoutesActivity", "No services found");
 		}
 				
-		// sql which displays all available routes today in the next hour
-		String sql = "select distinct T2.trip_headsign, T1.arrival_time " + 
-		"from trips as T2 " + 
-		"JOIN stop_times as T1 " + 
-		"ON T1.trip_id = T2.trip_id " +
-		"and T1.stop_id  = '" + stopId + "' " +
-		//"and time(T1.arrival_time) <= time('now', 'localtime', '+60 minutes') " +
-		//"and time(T1.arrival_time) >= time('now', 'localtime', '-60 minutes') " +
-		"and T2.service_id = '" + serviceName + "' " +
-		"order by T1.arrival_time"; 
+		// boolean to determine if there were any stops found
+		boolean noCards = true;
 		
-		Cursor cursor = db.rawQuery(sql, null);
-		
-		// display all routes for this stop
-		if (cursor.moveToFirst()) {
-			do {
-				String tripName = cursor.getString(cursor.getColumnIndex("trip_headsign"));
-				String arrivalTime = cursor.getString(cursor.getColumnIndex("arrival_time"));
-				MyPlayCard routeCard;
-				dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
-				DateTimeComparator comparator = DateTimeComparator.getTimeOnlyInstance();
-				int comparison = comparator.compare((Date)dateFormat.parse(arrivalTime), new Timestamp(new Date().getTime()));
-				if (comparison < 0) {
-					routeCard = new MyPlayCard(tripName,
-							arrivalTime, "#e00707", "#e00707", false, true);
-				}
-				else {
-					routeCard = new MyPlayCard(tripName,
-							arrivalTime, "#33b6ea", "#33b6ea", false, true);
-				}				
-				mCardView.addCard(routeCard);
-			} while (cursor.moveToNext());
-		}
-		else {
-			findViewById(R.id.nostops).setVisibility(1);
+		// iterate through different services
+		for (int i = 0; i < serviceName.size(); i++) {
+			// sql which displays all available routes today in the next hour
+			String sql = "select distinct T2.trip_headsign, T1.arrival_time " + 
+			"from trips as T2 " + 
+			"JOIN stop_times as T1 " + 
+			"ON T1.trip_id = T2.trip_id " +
+			"and T1.stop_id  = '" + stopId + "' " +
+			//"and time(T1.arrival_time) <= time('now', 'localtime', '+60 minutes') " +
+			//"and time(T1.arrival_time) >= time('now', 'localtime', '-60 minutes') " +
+			"and T2.service_id = '" + serviceName.get(i) + "' " +
+			"order by T1.arrival_time"; 
+			
+			Cursor cursor = db.rawQuery(sql, null);
+			
+			// display all routes for this stop
+			if (cursor.moveToFirst()) {
+				do {
+					String tripName = cursor.getString(cursor.getColumnIndex("trip_headsign"));
+					String arrivalTime = cursor.getString(cursor.getColumnIndex("arrival_time"));
+					MyPlayCard routeCard;
+					dateFormat = new SimpleDateFormat("HH:mm:ss", Locale.ENGLISH);
+					DateTimeComparator comparator = DateTimeComparator.getTimeOnlyInstance();
+					int comparison = comparator.compare((Date)dateFormat.parse(arrivalTime), new Timestamp(new Date().getTime()));
+					if (comparison < 0) {
+						routeCard = new MyPlayCard(tripName,
+								arrivalTime, this.getString(R.color.red), "#e00707", false, true);
+					}
+					else {
+						routeCard = new MyPlayCard(tripName,
+								arrivalTime, "#33b6ea", "#33b6ea", false, true);
+					}				
+					mCardView.addCard(routeCard);
+					noCards = false;
+				} while (cursor.moveToNext());
+			}
 		}
 				
+		// if no stops, add card saying there are no cards
+		if (noCards) {
+			mCardView.addCard(new MyPlayCard(this.getString(R.string.no_stops), 
+					null, "#e00707", "#e00707", false, false));
+		}
+		
 		// draw cards
 		mCardView.refresh();
 	}
