@@ -599,6 +599,11 @@ containing a value of this type.
         res/values-v11/styles.xml on API 14+ devices.
     
  API 14 theme customizations can go here. 
+
+        Base application theme for API 19+. This theme completely replaces
+        AppBaseTheme from BOTH res/values/styles.xml and
+        res/values-v11/styles.xml on API 19+ devices.
+    
          */
         public static final int AppBaseTheme=0x7f0a0008;
         /**  Application theme. 
@@ -625,6 +630,7 @@ containing a value of this type.
         public static final int Item_Sticky=0x7f0a0007;
         public static final int Item_Top=0x7f0a0006;
         public static final int StackTitle=0x7f0a0004;
+        public static final int TranslucentActionBar=0x7f0a000a;
     }
     public static final class xml {
         public static final int searchable=0x7f040000;
