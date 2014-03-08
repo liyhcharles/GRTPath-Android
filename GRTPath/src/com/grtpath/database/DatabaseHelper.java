@@ -36,7 +36,7 @@ public class DatabaseHelper {
             // Check that we have the latest version of the db
             boolean doUpgrade = false;
 
-            // INSERT UPGRADE LOGIC
+            // INSERT UPGRADE LOGIC : TO  DO
 
             // upgrade the DB
             if (doUpgrade) {

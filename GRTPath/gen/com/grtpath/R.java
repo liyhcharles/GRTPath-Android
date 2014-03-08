@@ -493,7 +493,7 @@ containing a value of this type.
         [CHAR LIMIT=70] 
          */
         public static final int auth_client_using_bad_version_title=0x7f070014;
-        public static final int color_stripe=0x7f070022;
+        public static final int color_stripe=0x7f070021;
         /**  Button in confirmation dialog to enable Google Play services.  Clicking it
         will direct user to application settings of Google Play services where they
         can enable it [CHAR LIMIT=40] 
@@ -565,18 +565,17 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f070013;
-        public static final int desc=0x7f070020;
-        public static final int hello_world=0x7f07001c;
-        public static final int menu_settings=0x7f07001d;
-        public static final int no_search=0x7f070025;
-        public static final int no_stops=0x7f070028;
-        public static final int overflow=0x7f070021;
-        public static final int search_hint=0x7f070024;
-        public static final int title=0x7f07001f;
-        public static final int title_activity_display_routes=0x7f070026;
-        public static final int title_activity_main=0x7f07001e;
-        public static final int title_activity_map=0x7f070027;
-        public static final int title_activity_stop_finder=0x7f070023;
+        public static final int desc=0x7f07001f;
+        public static final int menu_settings=0x7f07001c;
+        public static final int no_search=0x7f070024;
+        public static final int no_stops=0x7f070027;
+        public static final int overflow=0x7f070020;
+        public static final int search_hint=0x7f070023;
+        public static final int title=0x7f07001e;
+        public static final int title_activity_display_routes=0x7f070025;
+        public static final int title_activity_main=0x7f07001d;
+        public static final int title_activity_map=0x7f070026;
+        public static final int title_activity_stop_finder=0x7f070022;
     }
     public static final class style {
         /** 
