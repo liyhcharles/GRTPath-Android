@@ -19,7 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.grtpath.R;
-import com.grtpath.database.DatabaseHelper;
+import com.grtpath.database.DatabaseAssetHelper;
 
 public class MapActivity extends Activity implements OnInfoWindowClickListener {
 
@@ -67,7 +67,9 @@ public class MapActivity extends Activity implements OnInfoWindowClickListener {
         map.setOnInfoWindowClickListener(this);
         
         // get database and cursor
-        SQLiteDatabase db = DatabaseHelper.getStaticDb();     				
+        DatabaseAssetHelper dbHelper = new DatabaseAssetHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();  
+        
         Cursor cursor = null;
         cursor = db.query("stops", 
         		new String[]{"stop_lat", "stop_lon", "stop_id", "stop_name"}, 

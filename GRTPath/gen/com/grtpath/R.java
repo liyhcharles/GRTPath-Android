@@ -565,6 +565,7 @@ containing a value of this type.
         /**  Long form sign-in button text [CHAR LIMIT=30] 
          */
         public static final int common_signin_button_text_long=0x7f070013;
+        public static final int database_name=0x7f070028;
         public static final int desc=0x7f07001f;
         public static final int menu_settings=0x7f07001c;
         public static final int no_search=0x7f070024;
@@ -625,11 +626,11 @@ containing a value of this type.
         public static final int CardText=0x7f0a0000;
         public static final int CardTitle=0x7f0a0002;
         public static final int CardTitleBold=0x7f0a0003;
+        public static final int GreenActionBar=0x7f0a000a;
         public static final int Item=0x7f0a0005;
         public static final int Item_Sticky=0x7f0a0007;
         public static final int Item_Top=0x7f0a0006;
         public static final int StackTitle=0x7f0a0004;
-        public static final int TranslucentActionBar=0x7f0a000a;
     }
     public static final class xml {
         public static final int searchable=0x7f040000;

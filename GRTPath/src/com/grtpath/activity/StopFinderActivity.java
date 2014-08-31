@@ -15,7 +15,7 @@ import android.widget.SearchView;
 
 import com.fima.cardsui.views.CardUI;
 import com.grtpath.R;
-import com.grtpath.database.DatabaseHelper;
+import com.grtpath.database.DatabaseAssetHelper;
 import com.grtpath.model.MyPlayCard;
 
 public class StopFinderActivity extends Activity {
@@ -43,7 +43,8 @@ public class StopFinderActivity extends Activity {
 		mCardView.clearCards();
 		
 		// get database and cursor
-		SQLiteDatabase db = DatabaseHelper.getStaticDb();
+		DatabaseAssetHelper dbHelper = new DatabaseAssetHelper(this);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
 				
 		Cursor cursor = null;
 		

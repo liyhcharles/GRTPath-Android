@@ -15,5 +15,6 @@
     <string name="title_activity_display_routes">Buses for today</string>
     <string name="title_activity_map">GRT Map</string>
     <string name="no_stops">No buses found for this stop today.</string>
+    <string name="database_name">GRTDB.sqlite</string>
 
 </resources>

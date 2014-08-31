@@ -1,7 +1,5 @@
 package com.grtpath.activity;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +11,6 @@ import android.view.View.OnClickListener;
 import com.fima.cardsui.views.CardUI;
 import com.grtpath.R;
 import com.grtpath.model.MyPlayCard;
-import com.grtpath.database.DatabaseHelper;
 
 public class MainActivity extends Activity {
 
@@ -22,12 +19,6 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		createCards();		
-		try {
-			DatabaseHelper.createDatabaseIfNotExists(this);
-		} catch (IOException e) {
-			Log.e("MainActivity", "Database IO Exception");
-			e.printStackTrace();
-		}
 	}
 	
 	/**

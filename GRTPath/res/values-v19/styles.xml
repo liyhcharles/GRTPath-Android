@@ -5,6 +5,15 @@
         AppBaseTheme from BOTH res/values/styles.xml and
         res/values-v11/styles.xml on API 19+ devices.
     -->
+    
+    <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
+        <item name="android:actionBarStyle">@style/GreenActionBar</item>
+    </style>
+    
+    <style name="GreenActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
+    	<item name="android:background">@android:color/holo_green_light</item>
+	</style>
+   	<!-- 
     <style name="AppBaseTheme" parent="android:Theme.Holo.Light.DarkActionBar">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
@@ -14,4 +23,5 @@
     <style name="TranslucentActionBar" parent="@android:style/Widget.Holo.Light.ActionBar">
     	<item name="android:background">@android:color/transparent</item>
 	</style>
+	-->
 </resources>

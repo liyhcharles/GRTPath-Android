@@ -22,7 +22,7 @@ import android.view.Menu;
 
 import com.fima.cardsui.views.CardUI;
 import com.grtpath.R;
-import com.grtpath.database.DatabaseHelper;
+import com.grtpath.database.DatabaseAssetHelper;
 import com.grtpath.model.MyPlayCard;
 
 public class DisplayRoutesActivity extends Activity {
@@ -54,7 +54,9 @@ public class DisplayRoutesActivity extends Activity {
 		CardUI mCardView = (CardUI) findViewById(R.id.routes_cardview);
 		mCardView.setSwipeable(false);
 		
-		SQLiteDatabase db = DatabaseHelper.getStaticDb();
+		// get database and cursor
+        DatabaseAssetHelper dbHelper = new DatabaseAssetHelper(this);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();  
 		
 		// get today's date in ######## format
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
