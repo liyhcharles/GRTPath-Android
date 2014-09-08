@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -15,6 +16,7 @@ public abstract class Card extends AbstractCard {
     protected View mCardLayout;
     private OnCardSwiped onCardSwipedListener;
     private OnClickListener mListener;
+    private OnLongClickListener onLongListener;
 
     public Card() {
 
@@ -156,6 +158,14 @@ public abstract class Card extends AbstractCard {
 
     public void setOnClickListener(OnClickListener listener) {
         mListener = listener;
+    }
+    
+    public OnLongClickListener getOnLongClickListener() {
+    	return onLongListener;
+    }
+
+    public void setOnLongClickListener(OnLongClickListener onLongListener) {
+    	this.onLongListener = onLongListener;
     }
 
     public void OnSwipeCard() {

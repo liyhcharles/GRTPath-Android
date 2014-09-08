@@ -11,16 +11,21 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.SearchView;
 
 import com.fima.cardsui.views.CardUI;
 import com.grtpath.R;
 import com.grtpath.database.DatabaseAssetHelper;
+import com.grtpath.database.DatabaseHelper;
+import com.grtpath.database.contract.DatabaseContract;
 import com.grtpath.model.MyPlayCard;
 
 public class StopFinderActivity extends Activity {
 	
 	private static String searchResult = "";
+	private static SQLiteDatabase db;
+	private static SQLiteDatabase favDb;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +33,24 @@ public class StopFinderActivity extends Activity {
 		setContentView(R.layout.activity_stop_finder);
 		setupActionBar();
 		handleIntent(getIntent());
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		db = new DatabaseAssetHelper(this).getReadableDatabase();
+		favDb = new DatabaseHelper(this).getWritableDatabase();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (db != null) {
+			db.close();
+		}
+		if (favDb != null) {
+			favDb.close();
+		}
 	}
 	
 	/**
@@ -42,10 +65,6 @@ public class StopFinderActivity extends Activity {
 		
 		mCardView.clearCards();
 		
-		// get database and cursor
-		DatabaseAssetHelper dbHelper = new DatabaseAssetHelper(this);
-		SQLiteDatabase db = dbHelper.getReadableDatabase();
-				
 		Cursor cursor = null;
 		
 		if (isInteger(searchResult)) {
@@ -67,8 +86,8 @@ public class StopFinderActivity extends Activity {
 		if (cursor.moveToFirst()) {
 			// list all available stops
 			do {
-				String stopName = cursor.getString(cursor.getColumnIndex("stop_name"));
-				final String stopId = cursor.getString(cursor.getColumnIndex("stop_id"));
+				final String stopName = cursor.getString(cursor.getColumnIndex("stop_name"));
+				final Integer stopId = cursor.getInt(cursor.getColumnIndex("stop_id"));
 				MyPlayCard stopCard = new MyPlayCard(stopId + " " + stopName,
 						stopName, color, color, false, true);
 				// on click, display routes for that stop
@@ -79,6 +98,13 @@ public class StopFinderActivity extends Activity {
 						 intent.putExtra("stop_id", stopId);
 						 startActivity(intent);
 					 }
+				});
+				stopCard.setOnLongClickListener(new OnLongClickListener() {
+					@Override
+					public boolean onLongClick(View v) {
+						favDb.execSQL(DatabaseContract.FavouriteStopsEntry.insertQuery(stopName, stopId));
+						return true;
+					}
 				});
 				mCardView.addCard(stopCard);
 				color = switchColor(color);
@@ -95,7 +121,6 @@ public class StopFinderActivity extends Activity {
 	    } catch(NumberFormatException e) { 
 	        return false; 
 	    }
-	    // only got here if we didn't return false
 	    return true;
 	}
 	

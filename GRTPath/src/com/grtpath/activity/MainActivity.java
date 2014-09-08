@@ -37,6 +37,14 @@ public class MainActivity extends Activity {
 		
 		mCardView.addCard(favourites);
 		
+		favourites.setOnClickListener(new OnClickListener() {
+			 @Override
+            public void onClick(View v) {
+				 Intent intent = new Intent(MainActivity.this, FavouritesActivity.class);
+				 startActivity(intent);
+			 }
+		});
+		
 		MyPlayCard stops = new MyPlayCard(
 				"Search for Stops",
 				"Look for a stop by name, number or location",

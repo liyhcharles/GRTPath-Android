@@ -2,6 +2,7 @@ package com.fima.cardsui.objects;
 
 import java.util.ArrayList;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.text.TextUtils;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -63,7 +65,8 @@ public class CardStack extends AbstractCard {
         return getView(context, null, swipable);
     }
 
-    public View getView(Context context, View convertView, boolean swipable) {
+    @SuppressLint("InflateParams")
+	public View getView(Context context, View convertView, boolean swipable) {
 
         mContext = context;
 
@@ -121,9 +124,11 @@ public class CardStack extends AbstractCard {
             // handle the listener
             if (i == lastCardPosition) {
                 cardView.setOnClickListener(card.getClickListener());
+                cardView.setOnLongClickListener(card.getOnLongClickListener());
             }
             else {
                 cardView.setOnClickListener(getClickListener(this, container, i));
+                cardView.setOnLongClickListener(getOnLongClickListener(this, container, i));
             }
 
             if (i > 0) {
@@ -323,6 +328,108 @@ public class CardStack extends AbstractCard {
         };
     }
 
+    private OnLongClickListener getOnLongClickListener(final CardStack cardStack,
+    		final RelativeLayout container, final int index) {
+    	return new OnLongClickListener() {
+    		
+    		@Override
+			public boolean onLongClick(View v) {
+    			// init views array
+    			View[] views = new View[container.getChildCount()];
+    			
+    			for (int i = 0; i < views.length; i++) {
+    				views[i] = container.getChildAt(i);
+    				
+    			}
+    			
+    			int last = views.length - 1;
+    			
+    			if (index != last) {
+    				
+    				if (index == 0) {
+    					onClickFirstCard(cardStack, container, index, views);
+    				} else if (index < last) {
+    					onClickOtherCard(cardStack, container, index, views,
+    							last);
+    				}
+    				
+    			}
+				return false;
+			}
+    		
+    		public void onClickFirstCard(final CardStack cardStack,
+    				final RelativeLayout frameLayout, final int index,
+    				View[] views) {
+    			// run through all the cards
+    			for (int i = 0; i < views.length; i++) {
+    				ObjectAnimator anim = null;
+    				
+    				if (i == 0) {
+    					// the first goes all the way down
+    					float downFactor = 0;
+    					if (views.length > 2) {
+    						downFactor = convertDpToPixel((_45F)
+    								* (views.length - 1) - 1);
+    					} else {
+    						downFactor = convertDpToPixel(_45F);
+    					}
+    					
+    					anim = ObjectAnimator.ofFloat(views[i],
+    							NINE_OLD_TRANSLATION_Y, 0, downFactor);
+    					anim.addListener(getAnimationListener(cardStack,
+    							frameLayout, index, views[index]));
+    					
+    				} else if (i == 1) {
+    					// the second goes up just a bit
+    					
+    					float upFactor = convertDpToPixel(-17f);
+    					anim = ObjectAnimator.ofFloat(views[i],
+    							NINE_OLD_TRANSLATION_Y, 0, upFactor);
+    					
+    				} else {
+    					// the rest go up by one card
+    					float upFactor = convertDpToPixel(-1 * _45F);
+    					anim = ObjectAnimator.ofFloat(views[i],
+    							NINE_OLD_TRANSLATION_Y, 0, upFactor);
+    				}
+    				
+    				if (anim != null)
+    					anim.start();
+    				
+    			}
+    		}
+    		
+    		public void onClickOtherCard(final CardStack cardStack,
+    				final RelativeLayout frameLayout, final int index,
+    				View[] views, int last) {
+    			// if clicked card is in middle
+    			for (int i = index; i <= last; i++) {
+    				// run through the cards from the clicked position
+    				// and on until the end
+    				ObjectAnimator anim = null;
+    				
+    				if (i == index) {
+    					// the selected card goes all the way down
+    					float downFactor = convertDpToPixel(_45F * (last - i)
+    							+ _12F);
+    					anim = ObjectAnimator.ofFloat(views[i],
+    							NINE_OLD_TRANSLATION_Y, 0, downFactor);
+    					anim.addListener(getAnimationListener(cardStack,
+    							frameLayout, index, views[index]));
+    				} else {
+    					// the rest go up by one
+    					float upFactor = convertDpToPixel(_45F * -1);
+    					anim = ObjectAnimator.ofFloat(views[i],
+    							NINE_OLD_TRANSLATION_Y, 0, upFactor);
+    				}
+    				
+    				if (anim != null)
+    					anim.start();
+    			}
+    		}
+    	};
+    }
+    
     protected float convertDpToPixel(float dp) {
 
         return Utils.convertDpToPixel(mContext, dp);

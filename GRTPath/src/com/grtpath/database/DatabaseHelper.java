@@ -1,6 +1,6 @@
 package com.grtpath.database;
 
-import com.grtpath.database.contract.FavouriteStopsContract.FavouriteStopsEntry;
+import com.grtpath.database.contract.DatabaseContract.FavouriteStopsEntry;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -15,15 +15,6 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
 	
-	private static final String TEXT_TYPE = " TEXT";
-	private static final String COMMA_SEP = ",";
-	private static final String SQL_CREATE_ENTRIES =
-	    "CREATE TABLE " + FavouriteStopsEntry.TABLE_NAME + " (" +
-	    		FavouriteStopsEntry.COLUMN_NAME_FAVOURITES_ID + " INTEGER PRIMARY KEY," +
-	    		FavouriteStopsEntry.COLUMN_NAME_STOP_NAME + TEXT_TYPE + COMMA_SEP +
-	    		FavouriteStopsEntry.COLUMN_NAME_STOP_ID + TEXT_TYPE + COMMA_SEP +
-	    		" )";
-
 	private static final String SQL_DELETE_ENTRIES = "DROP TABLE IF EXISTS " + FavouriteStopsEntry.TABLE_NAME;
 	
 	 // If you change the database schema, you must increment the database version.
@@ -35,7 +26,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
     
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_ENTRIES);
+        db.execSQL(FavouriteStopsEntry.CREATE_TABLE);
     }
     
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

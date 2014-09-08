@@ -34,7 +34,7 @@ public class DisplayRoutesActivity extends Activity {
 		setupActionBar();
 		
 		Intent intent = getIntent();
-		String stopId = intent.getStringExtra("stop_id");
+		int stopId = intent.getIntExtra("stop_id", 0);
 		
 		try {
 			displayRoutes(stopId);
@@ -47,14 +47,12 @@ public class DisplayRoutesActivity extends Activity {
 	 * Display routes
 	 * @throws ParseException 
 	 */
-	private void displayRoutes(String stopId) throws ParseException {
+	private void displayRoutes(int stopId) throws ParseException {
 		Log.i("DisplayRoutesActivity", "Displaying routes for " + stopId);
 		
-		// init CardView
 		CardUI mCardView = (CardUI) findViewById(R.id.routes_cardview);
 		mCardView.setSwipeable(false);
 		
-		// get database and cursor
         DatabaseAssetHelper dbHelper = new DatabaseAssetHelper(this);
         SQLiteDatabase db = dbHelper.getReadableDatabase();  
 		
@@ -62,7 +60,6 @@ public class DisplayRoutesActivity extends Activity {
 		DateFormat dateFormat = new SimpleDateFormat("yyyyMMdd", Locale.ENGLISH);
 		Calendar cal = Calendar.getInstance();
 		String todayDate = dateFormat.format(cal.getTime());
-		
 		// get today's day name (i.e. Sunday)
 		dateFormat = new SimpleDateFormat("EEEE", Locale.ENGLISH);
 		String dayName = dateFormat.format(cal.getTime());
@@ -71,7 +68,7 @@ public class DisplayRoutesActivity extends Activity {
 		String serviceSQL = "select service_id from calendar " +
 		"where '" + todayDate + "' >= start_date " + 
 		"and '" + todayDate + "' <= end_date " + 
-		"and " + dayName + " = '1'";
+		"and " + dayName + " = 1";
 		
 		Cursor serviceCursor = db.rawQuery(serviceSQL, null);
 		
@@ -90,9 +87,7 @@ public class DisplayRoutesActivity extends Activity {
 			Log.e("DisplayRoutesActivity", "No services found");
 		}
 				
-		// boolean to determine if there were any stops found
 		boolean noCards = true;
-		
 		// iterate through different services
 		for (int i = 0; i < serviceName.size(); i++) {
 			// sql which displays all available routes today in the next hour
@@ -100,7 +95,7 @@ public class DisplayRoutesActivity extends Activity {
 			"from trips as T2 " + 
 			"JOIN stop_times as T1 " + 
 			"ON T1.trip_id = T2.trip_id " +
-			"and T1.stop_id  = '" + stopId + "' " +
+			"and T1.stop_id  = " + stopId + " " +
 			//"and time(T1.arrival_time) <= time('now', 'localtime', '+60 minutes') " +
 			//"and time(T1.arrival_time) >= time('now', 'localtime', '-60 minutes') " +
 			"and T2.service_id = '" + serviceName.get(i) + "' " +
@@ -136,9 +131,9 @@ public class DisplayRoutesActivity extends Activity {
 			mCardView.addCard(new MyPlayCard(this.getString(R.string.no_stops), 
 					null, "#e00707", "#e00707", false, false));
 		}
-		
-		// draw cards
 		mCardView.refresh();
+		
+		db.close();
 	}
 
 	@Override

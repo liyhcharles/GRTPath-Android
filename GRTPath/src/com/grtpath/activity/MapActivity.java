@@ -98,7 +98,7 @@ public class MapActivity extends Activity implements OnInfoWindowClickListener {
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		String title = marker.getTitle();
-		String stopId = title.split("\\s")[0];
+		Integer stopId = Integer.valueOf(title.split("\\s")[0]);
 		
 		Intent intent = new Intent(MapActivity.this, DisplayRoutesActivity.class);
 		intent.putExtra("stop_id", stopId);
